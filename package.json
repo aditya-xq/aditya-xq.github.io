@@ -1,14 +1,15 @@
 {
-  "name": "svelte-app",
+  "homepage": "https://aditya-xq.github.io",
+  "name": "aditya-xq.github.io",
   "version": "1.0.0",
   "private": true,
-  "homepage": "https://aditya-xq.github.io/my-app",
   "scripts": {
     "build": "rollup -c",
     "dev": "rollup -c -w",
     "start": "sirv public --no-clear",
     "check": "svelte-check --tsconfig ./tsconfig.json",
-    "deploy": "node ./gh-pages.js"
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -b master -d build"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^17.0.0",
