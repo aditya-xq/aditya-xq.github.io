@@ -1,0 +1,16 @@
+$color-default: #22303c;
+$color-highlighted: #7be11e;
+$color-text: #889986;
+$background-color-dark: #14171A;
+$background-color-light: #f2eee2;
+
+:global(body) {
+    background-color: $background-color-light;
+	color: #0084f6;
+	transition: $background-color-light 0.3s;
+}
+
+:global(body.dark-mode) {
+    background-color: $background-color-dark;
+    color: #bfc2c7;
+}
