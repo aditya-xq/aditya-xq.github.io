@@ -1,10 +1,11 @@
 {
   "scripts": {
-    "build": "bun build:html && bun build:css",
-    "build:html": "bun build src/index.html --outdir=dist",
-    "build:css": "cp node_modules/altcss/alt.min.css dist/"
+    "build": "bun build.js"
   },
   "dependencies": {
     "altcss": "^0.0.10"
+  },
+  "devDependencies": {
+    "html-minifier": "^4.0.0"
   }
 }
