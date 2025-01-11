@@ -1,0 +1,10 @@
+{
+  "scripts": {
+    "build": "bun build:html && bun build:css",
+    "build:html": "bun build src/index.html --outdir=dist",
+    "build:css": "cp node_modules/altcss/alt.min.css dist/"
+  },
+  "dependencies": {
+    "altcss": "^0.0.10"
+  }
+}
