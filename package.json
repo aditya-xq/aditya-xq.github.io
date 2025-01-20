@@ -3,7 +3,7 @@
     "build": "bun build.js"
   },
   "dependencies": {
-    "altcss": "^0.0.12"
+    "altcss": "0.0.14"
   },
   "devDependencies": {
     "html-minifier": "^4.0.0"
