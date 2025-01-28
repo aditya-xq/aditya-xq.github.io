@@ -7,10 +7,13 @@ const SRC_DIR = './src';
 const DIST_DIR = './dist';
 const CSS_SOURCE = './node_modules/altcss/alt.min.css';
 const CSS_DEST = path.join(DIST_DIR, 'alt.min.css');
+const ASSETS_SOURCE = path.join(SRC_DIR, 'assets');
+const ASSETS_DEST = path.join(DIST_DIR, 'assets');
 
 // Step 1: Clean the output directory
 fs.rmSync(DIST_DIR, { recursive: true, force: true });
 fs.mkdirSync(DIST_DIR);
+fs.mkdirSync(ASSETS_DEST);
 
 // Step 2: Optimize and Copy HTML
 const htmlPath = path.join(SRC_DIR, 'index.html');
@@ -24,5 +27,8 @@ fs.writeFileSync(path.join(DIST_DIR, 'index.html'), minifiedHTML);
 
 // Step 3: Copy CSS from node_modules
 fs.copyFileSync(CSS_SOURCE, CSS_DEST);
+
+// Step 4: Copy assets
+fs.cpSync(ASSETS_SOURCE, ASSETS_DEST, { recursive: true });
 
 console.log('Build completed successfully!');
