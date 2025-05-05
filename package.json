@@ -1,11 +1,11 @@
 {
+  "devDependencies": {
+    "html-minifier": "^4.0.0"
+  },
   "scripts": {
     "build": "bun build.js"
   },
   "dependencies": {
-    "altcss": "0.0.15"
-  },
-  "devDependencies": {
-    "html-minifier": "^4.0.0"
+    "altcss": "^0.0.21"
   }
 }
