@@ -33,43 +33,6 @@ jobs:
         uses: actions/checkout@v4
       - name: Setup Pages
         uses: actions/configure-pages@v5
-      - name: Prepare dist for Pages (copy terminal assets to root)
-        if: always()
-        run: |
-          echo "Preparing dist for GitHub Pages..."
-
-          # Ensure dist folder exists
-          if [ ! -d "dist" ]; then
-            echo "Error: dist/ not found. Did you forget to build?"; exit 1;
-          fi
-
-          # If terminal build exists, copy assets to root dist so /assets/ resolves.
-          if [ -d "dist/terminal" ]; then
-            echo "Found dist/terminal. Copying terminal assets to dist root..."
-            # Remove any old root assets to avoid stale files
-            rm -rf dist/assets || true
-            cp -r dist/terminal/assets dist/assets || echo "No terminal assets to copy."
-
-            # Optional: copy service worker / manifest if you want them available at root.
-            # BE CAREFUL: copying registerSW.js to root gives the service worker potential scope over the whole site.
-            if [ -f "dist/terminal/registerSW.js" ]; then
-              echo "Copying registerSW.js to dist root (SW will have root scope)."
-              cp dist/terminal/registerSW.js dist/registerSW.js
-            fi
-
-            if [ -f "dist/terminal/manifest.webmanifest" ]; then
-              echo "Copying manifest.webmanifest to dist root."
-              cp dist/terminal/manifest.webmanifest dist/manifest.webmanifest
-            fi
-
-            if [ -f "dist/terminal/site.webmanifest" ]; then
-              echo "Copying site.webmanifest to dist root."
-              cp dist/terminal/site.webmanifest dist/site.webmanifest
-            fi
-          else
-            echo "dist/terminal not found; nothing to copy."
-          fi
-
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
