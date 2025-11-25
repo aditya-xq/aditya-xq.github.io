@@ -1,166 +1,160 @@
 <!DOCTYPE html>
 <html lang="en" class="dark">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <meta name="description" content="Aditya Vivek Thota - Full-stack and Applied AI Software Engineer with 6.5+ years of experience. Portfolio showcasing projects, technical articles, and professional experience.">
-    <meta name="keywords" content="full-stack developer, AI engineer, tech writer, Aditya Vivek Thota, web development, programming">
-    <meta name="author" content="Aditya Vivek Thota">
-    <meta name="robots" content="index, follow">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Aditya Vivek Thota | Full-stack & Applied AI Engineer</title>
-
-    <!-- AltCSS -->
     <link rel="stylesheet" href="alt.min.css">
 
     <style>
-        /* ---------- Toggle UI (top-right) ---------- */
+        /* ---------- Minimal dark toggle (top-right) ---------- */
         .view-toggle {
             position: fixed;
-            top: 1rem;
-            right: 1rem;
-            z-index: 1200;
+            top: 12px;
+            right: 12px;
+            z-index: 1400;
             display: flex;
             align-items: center;
-            gap: .6rem;
-            font-size: 0.9rem;
-            backdrop-filter: blur(6px) saturate(120%);
-            padding: .35rem .5rem;
+            gap: .5rem;
+            padding: .22rem .4rem;
             border-radius: 999px;
-            box-shadow: 0 6px 18px rgba(0,0,0,0.35);
-            background: rgba(20,20,20,0.55);
-            color: #f3f4f6;
+            background: rgba(10,10,12,0.75);
+            box-shadow: 0 6px 18px rgba(0,0,0,0.55);
+            color: #e6eef8;
+            font-size: .78rem;
+            user-select: none;
+            backdrop-filter: blur(6px) saturate(.9);
         }
 
+        /* compact switch */
         .switch {
-            --w: 58px;
-            --h: 30px;
+            --w: 44px;
+            --h: 22px;
             width: var(--w);
             height: var(--h);
             border-radius: calc(var(--h) / 2);
-            background: rgba(255,255,255,0.08);
-            position: relative;
-            display: inline-block;
+            background: rgba(255,255,255,0.04);
             padding: 3px;
+            display: inline-block;
+            position: relative;
             cursor: pointer;
-            -webkit-tap-highlight-color: transparent;
+            transition: background .28s ease, box-shadow .18s ease;
+            border: 1px solid rgba(255,255,255,0.03);
         }
+
         .switch .knob {
             width: calc(var(--h) - 6px);
             height: calc(var(--h) - 6px);
             border-radius: 50%;
-            background: linear-gradient(180deg, #fff, #dfe3ea);
+            background: linear-gradient(180deg,#f6f7fb,#daddf0);
             position: absolute;
             top: 3px;
             left: 3px;
-            transform: translateX(0);
-            transition: transform .35s cubic-bezier(.2,.9,.2,1), box-shadow .25s;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.35);
+            transition: transform .32s cubic-bezier(.2,.9,.2,1), box-shadow .2s;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.45);
         }
+
         .switch[aria-pressed="true"] {
-            background: linear-gradient(90deg, rgba(0,200,150,0.12), rgba(0,160,240,0.06));
+            background: linear-gradient(90deg, rgba(0,160,220,0.12), rgba(0,120,180,0.08));
+            border-color: rgba(0,140,200,0.22);
         }
+
         .switch[aria-pressed="true"] .knob {
             transform: translateX(calc(var(--w) - var(--h)));
-            box-shadow: 0 6px 18px rgba(0,160,240,0.18);
+            box-shadow: 0 6px 14px rgba(0,120,200,0.22);
         }
 
-        /* label text */
-        .view-toggle .label {
-            display: inline-flex;
-            align-items: center;
-            gap: .4rem;
-            user-select: none;
+        .hint {
+            color: #cfe8ff;
+            opacity: .85;
+            font-size: .7rem;
+            padding-left: .2rem;
         }
 
-        /* ---------- Layout wrappers ---------- */
+        .view-label {
+            color: #cfe8ff;
+            opacity: .95;
+            font-size: .78rem;
+            letter-spacing: .2px;
+        }
+
+        .view-toggle .sep { width:6px; }
+
+        /* ---------- Main content wrapper ---------- */
         .alt-root {
-            transition: transform .45s cubic-bezier(.2,.9,.2,1), opacity .35s ease, filter .35s ease;
-            transform-origin: center top;
-            z-index: 1;
+            transition: transform .45s cubic-bezier(.2,.9,.2,1), opacity .32s ease, filter .32s ease;
             position: relative;
-            background: transparent;
+            z-index: 1;
         }
 
-        /* hidden when terminal active */
         .hidden-by-terminal {
             pointer-events: none;
         }
 
-        /* ---------- Terminal frame (default hidden small) ---------- */
+        /* ---------- IFRAME (hidden until terminal mode) ---------- */
         #terminal-frame {
+            display: none;               /* <-- hidden completely on alt view (no space) */
             width: 100%;
             height: 600px;
             border: 0;
-            display: block;
-            transition: opacity .35s ease, transform .45s cubic-bezier(.2,.9,.2,1);
-            opacity: 1;
+            opacity: 0;
+            transition: opacity .28s ease, transform .28s ease;
         }
 
-        /* full-screen terminal mode */
+        /* terminal fullscreen takeover */
+        .terminal-mode {
+            overflow: hidden; /* hide page scrollbars while terminal active */
+            touch-action: none;
+        }
+
         .terminal-mode #terminal-frame {
+            display: block; /* now occupy viewport */
             position: fixed;
-            inset: 0; /* top:0; right:0; bottom:0; left:0; */
+            inset: 0;
             width: 100vw;
             height: 100vh;
-            z-index: 1100;
-            display: block;
-            background: #000;
+            z-index: 1350;
+            background: #000; /* helps when iframe has transparent BG */
             opacity: 1;
             transform: none;
-            transition: opacity .3s ease;
+            border: 0;
+            -webkit-overflow-scrolling: touch;
         }
 
-        /* when terminal active, hide alt-root visually */
+        /* hide alt-root visually and from assistive tech when terminal active */
         .terminal-mode .alt-root {
             opacity: 0;
-            transform: scale(.985) translateY(12px);
-            filter: blur(6px) saturate(.9) contrast(.9);
+            transform: translateY(10px) scale(.985);
+            filter: blur(6px) saturate(.9) contrast(.95);
             pointer-events: none;
-            transition: transform .35s cubic-bezier(.2,.9,.2,1), opacity .35s ease, filter .35s ease;
         }
 
-        /* subtle enter/exit animation helper */
-        .view-switching .alt-root,
-        .view-switching #terminal-frame {
-            transition-duration: .28s;
+        /* reduce motion if user prefers */
+        @media (prefers-reduced-motion: reduce) {
+            .alt-root, #terminal-frame, .switch .knob { transition: none !important; }
         }
-
-        /* small keyboard hint */
-        .toggle-hint {
-            font-size: .75rem;
-            opacity: .8;
-            color: #dbeafe;
-        }
-
-        /* accessibility focus */
-        .switch:focus { outline: 2px solid rgba(59,130,246,0.6); outline-offset: 3px; border-radius: 999px; }
 
         @media (min-width: 1980px) {
             body { max-width: 1600px; margin: auto; padding: 2.5rem; }
         }
-
-        /* Respect reduced motion */
-        @media (prefers-reduced-motion: reduce) {
-            .alt-root, #terminal-frame, .view-switching * { transition: none !important; animation: none !important; }
-        }
     </style>
 </head>
 <body>
-    <!-- TOP-RIGHT TOGGLE -->
+    <!-- TOGGLE -->
     <div class="view-toggle" aria-hidden="false">
-        <div class="label" aria-hidden="true">AltCSS</div>
+        <div class="view-label">AltCSS</div>
 
-        <!-- accessible switch; aria-pressed="false" => altcss, "true" => terminal -->
-        <button id="viewSwitch" class="switch" role="switch" aria-checked="false" aria-pressed="false" title="Toggle Terminal view (T)">
+        <button id="viewSwitch" class="switch" role="switch" aria-checked="false" aria-pressed="false"
+                title="Toggle Terminal view (T)">
             <span class="knob" aria-hidden="true"></span>
         </button>
 
-        <div class="label" aria-hidden="true">Terminal</div>
-        <div style="width:8px"></div>
-        <div class="toggle-hint">Esc / T</div>
+        <div class="sep"></div>
+        <div class="view-label">Terminal</div>
+        <div class="hint">Esc • T</div>
     </div>
 
-    <!-- MAIN: wrap original content so we can hide it easily -->
+    <!-- ORIGINAL CONTENT (wrap everything) -->
     <div class="alt-root" id="altRoot">
         <header>
             <h4>👨‍💻 Aditya's Digital Portfolio</h4>
@@ -222,6 +216,7 @@
                     </ol>
                 </article>
             </section>
+
             <hr>
             <section id="metrics" aria-label="Metrics">
                 <h4>📈 My Profile in Numbers</h4>
@@ -234,6 +229,7 @@
                     <li><p>🌟 GitHub: 650+ contributions in 2024</p></li>
                 </ul>
             </section>
+
             <hr>
             <section id="resume" aria-label="Resume">
                 <h4>👨‍💻 Little more about my work exp</h4>
@@ -270,9 +266,10 @@
                             <li>📝 Previously, I led the Writing Program at <b>Qrius</b>, where I managed editorial operations for a 12M+ reader base. I collaborated with the research team to bring fresh and insightful content to a diverse and informed audience, focusing on quality and engagement.</li>
                             <li>Before that, as <b>Head of Content at Probe, NIT Trichy</b>, I built the team’s blog presence from the ground up. I started flagship series like Alumni Corner and Probe Interviews and expanded the brand’s presence on LinkedIn and Instagram. My leadership ensured consistency and quality across all written and marketing output.</li>
                         </ul>
-                    </section> 
+                    </section>
                 </div>
             </section>
+
             <hr>
             <section id="contact" aria-label="Contact">
                 <h4>📧 Contact</h4>
@@ -287,113 +284,100 @@
         </footer>
     </div>
 
-    <!-- Terminal iframe: lazy-loaded. data-src used so it doesn't load until needed -->
+    <!-- IFRAME: hidden until terminal-mode. use data-src so it's not requested until needed -->
     <iframe id="terminal-frame"
-        data-src="terminal/index.html"
-        sandbox="allow-scripts allow-same-origin allow-forms"
-        loading="lazy"
-        title="Terminal View"
-        style="width:100%;height:600px;border:0;">
-    </iframe>
+            data-src="terminal/index.html"
+            sandbox="allow-scripts allow-same-origin allow-forms"
+            title="Terminal view (lazy)"
+            aria-hidden="true"
+            style="display:none;"></iframe>
 
     <script>
         (function () {
             const KEY = 'preferredView'; // 'alt' or 'terminal'
             const DEFAULT = 'alt';
-            const doc = document.documentElement;
             const body = document.body;
             const viewSwitch = document.getElementById('viewSwitch');
             const altRoot = document.getElementById('altRoot');
             const iframe = document.getElementById('terminal-frame');
 
-            // read saved preference
             function getSaved() {
-                try {
-                    return localStorage.getItem(KEY) || DEFAULT;
-                } catch (e) {
-                    return DEFAULT;
-                }
+                try { return localStorage.getItem(KEY) || DEFAULT; } catch (e) { return DEFAULT; }
             }
+            function save(pref) { try { localStorage.setItem(KEY, pref); } catch (e) {} }
 
-            // save preference
-            function save(pref) {
-                try { localStorage.setItem(KEY, pref); } catch(e){}
-            }
-
-            // set iframe src lazily on first terminal open
             let iframeLoaded = false;
             function ensureIframeLoaded() {
                 if (!iframeLoaded) {
-                    const data = iframe.getAttribute('data-src');
-                    if (data) iframe.setAttribute('src', data);
+                    const src = iframe.getAttribute('data-src');
+                    if (src) {
+                        iframe.setAttribute('src', src);
+                        iframe.removeAttribute('data-src');
+                    }
                     iframeLoaded = true;
                 }
             }
 
-            // apply the view, animated
             function setView(pref, instant = false) {
                 const goingTerminal = pref === 'terminal';
-                // accessibility states
                 viewSwitch.setAttribute('aria-pressed', goingTerminal ? 'true' : 'false');
                 viewSwitch.setAttribute('aria-checked', goingTerminal ? 'true' : 'false');
 
-                // small class while animating
+                // quick animation-class
                 body.classList.add('view-switching');
 
-                // ensure iframe loads if terminal requested
-                if (goingTerminal) ensureIframeLoaded();
-
-                // tweak classes for terminal mode
                 if (goingTerminal) {
-                    // add class on <body> that triggers CSS to show fullscreen terminal and hide alt-root
-                    body.classList.add('terminal-mode');
-                    // hide alt-root from keyboard and screen readers
+                    ensureIframeLoaded();
+                    // show iframe as fixed full-screen
+                    iframe.style.display = 'block';
+                    // slight delay to allow layout then flip on class so CSS transitions apply
+                    requestAnimationFrame(() => body.classList.add('terminal-mode'));
+                    // hide alt-root to SRs and pointer events
                     altRoot.setAttribute('aria-hidden', 'true');
                     altRoot.classList.add('hidden-by-terminal');
                 } else {
+                    // exit terminal: remove terminal-mode then hide iframe after transition
                     body.classList.remove('terminal-mode');
                     altRoot.removeAttribute('aria-hidden');
                     altRoot.classList.remove('hidden-by-terminal');
+
+                    // after a short delay remove iframe from layout (so no stray scrollbar/space)
+                    setTimeout(() => {
+                        // keep src if you want fast reopen; to free memory you could unset src here
+                        iframe.style.display = 'none';
+                    }, 250);
                 }
 
-                // small timeout to remove switching helper after transition
+                // small timeout to remove switching helper
                 if (instant) {
-                    // remove quickly
                     setTimeout(() => body.classList.remove('view-switching'), 40);
                 } else {
                     setTimeout(() => body.classList.remove('view-switching'), 420);
                 }
 
-                // persist
                 save(pref);
             }
 
-            // toggle handler
             function toggleView() {
-                const current = (viewSwitch.getAttribute('aria-pressed') === 'true') ? 'terminal' : 'alt';
-                const next = current === 'terminal' ? 'alt' : 'terminal';
-                setView(next);
+                const curr = viewSwitch.getAttribute('aria-pressed') === 'true' ? 'terminal' : 'alt';
+                setView(curr === 'terminal' ? 'alt' : 'terminal');
             }
 
-            // init according to saved preference
+            // init (no iframe in DOM flow if alt view)
             const initial = getSaved();
-            // set the UI quickly without long animation on load
             setView(initial, true);
 
-            // click
-            viewSwitch.addEventListener('click', function (e) {
+            viewSwitch.addEventListener('click', (e) => {
                 e.preventDefault();
                 toggleView();
-                // visual feedback - small bounce
-                this.animate([{ transform: 'scale(0.98)' }, { transform: 'scale(1)' }], { duration: 180 });
+                // micro feedback
+                viewSwitch.animate([{ transform: 'scale(.98)' }, { transform: 'scale(1)' }], { duration: 150 });
             });
 
-            // keyboard shortcuts: 'T' toggles, ESC exits terminal view
+            // keyboard shortcuts
             window.addEventListener('keydown', (ev) => {
-                // don't catch typing in inputs
                 const tag = document.activeElement && document.activeElement.tagName;
                 if (tag === 'INPUT' || tag === 'TEXTAREA' || document.activeElement.isContentEditable) return;
-
                 if (ev.key === 'T' || ev.key === 't') {
                     ev.preventDefault();
                     toggleView();
@@ -404,22 +388,16 @@
                 }
             });
 
-            // click outside terminal when terminal-mode -> no-op (keeps terminal)
-            // optionally you could add a small "Exit" UI inside the terminal iframe, but cross-origin may prevent messaging
-            // so we rely on ESC and the toggle button.
+            // optional: honor ?terminal=1 query param to open terminal on load
+            try {
+                const params = new URLSearchParams(location.search);
+                if (params.get('terminal') === '1') {
+                    setView('terminal');
+                }
+            } catch (e) {}
 
-            // If you want to start with the terminal when the URL has ?terminal, honor it
-            const urlParams = new URLSearchParams(location.search);
-            if (urlParams.get('terminal') === '1') {
-                setView('terminal');
-            }
-
-            // expose small API for debugging if needed
-            window._xqView = {
-                setView,
-                toggleView,
-                getView: () => (viewSwitch.getAttribute('aria-pressed') === 'true') ? 'terminal' : 'alt'
-            };
+            // expose minimal API
+            window._xqView = { setView, toggleView, getView: () => (viewSwitch.getAttribute('aria-pressed') === 'true') ? 'terminal' : 'alt' };
         })();
     </script>
 </body>

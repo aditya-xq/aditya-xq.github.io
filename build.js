@@ -24,6 +24,7 @@ const minifiedHTML = minify(htmlContent, {
   collapseWhitespace: true,
   removeComments: true,
   minifyCSS: true,
+  minifyJS: true,
 })
 fs.writeFileSync(path.join(DIST_DIR, 'index.html'), minifiedHTML)
 
