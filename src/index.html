@@ -1,63 +1,184 @@
 <!DOCTYPE html>
 <html lang="en" class="dark">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <meta name="description" content="Aditya Vivek Thota - Full-stack and Applied AI Software Engineer with 6.5+ years of experience. Portfolio showcasing projects, technical articles, and professional experience.">
     <meta name="keywords" content="full-stack developer, AI engineer, tech writer, Aditya Vivek Thota, web development, programming">
     <meta name="author" content="Aditya Vivek Thota">
     <meta name="robots" content="index, follow">
-    <meta property="og:title" content="Aditya's Portfolio - Full-stack & Applied AI Engineer">
-    <meta property="og:description" content="Professional portfolio of Aditya Vivek Thota - Full-stack and Applied AI Software Engineer">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://aditya-xq.github.io">
-    <meta property="og:image" content="https://aditya-xq.github.io/assets/cover.png">
-    <meta property="og:image:width" content="1200">
-    <meta property="og:image:height" content="630">
-    <meta name="twitter:image:width" content="1200">
-    <meta name="twitter:image:height" content="630">
-    <meta name="linkedin:image:width" content="1200">
-    <meta name="linkedin:image:height" content="630">
-
-    <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://aditya-xq.github.io/">
-    <meta property="twitter:title" content="Aditya's Portfolio - Full-stack & Applied AI Engineer">
-    <meta property="twitter:description" content="Professional portfolio of Aditya Vivek Thota - Full-stack and Applied AI Software Engineer.">
-    <meta property="twitter:image" content="https://aditya-xq.github.io/assets/cover.png">
-
     <title>Aditya Vivek Thota | Full-stack & Applied AI Engineer</title>
+
+    <!-- AltCSS -->
     <link rel="stylesheet" href="alt.min.css">
-    <link rel="canonical" href="https://aditya-xq.github.io">
+
     <style>
+        /* ---------- Toggle UI (top-right) ---------- */
+        .view-toggle {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            z-index: 1200;
+            display: flex;
+            align-items: center;
+            gap: .6rem;
+            font-size: 0.9rem;
+            backdrop-filter: blur(6px) saturate(120%);
+            padding: .35rem .5rem;
+            border-radius: 999px;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.35);
+            background: rgba(20,20,20,0.55);
+            color: #f3f4f6;
+        }
+
+        .switch {
+            --w: 58px;
+            --h: 30px;
+            width: var(--w);
+            height: var(--h);
+            border-radius: calc(var(--h) / 2);
+            background: rgba(255,255,255,0.08);
+            position: relative;
+            display: inline-block;
+            padding: 3px;
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .switch .knob {
+            width: calc(var(--h) - 6px);
+            height: calc(var(--h) - 6px);
+            border-radius: 50%;
+            background: linear-gradient(180deg, #fff, #dfe3ea);
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            transform: translateX(0);
+            transition: transform .35s cubic-bezier(.2,.9,.2,1), box-shadow .25s;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.35);
+        }
+        .switch[aria-pressed="true"] {
+            background: linear-gradient(90deg, rgba(0,200,150,0.12), rgba(0,160,240,0.06));
+        }
+        .switch[aria-pressed="true"] .knob {
+            transform: translateX(calc(var(--w) - var(--h)));
+            box-shadow: 0 6px 18px rgba(0,160,240,0.18);
+        }
+
+        /* label text */
+        .view-toggle .label {
+            display: inline-flex;
+            align-items: center;
+            gap: .4rem;
+            user-select: none;
+        }
+
+        /* ---------- Layout wrappers ---------- */
+        .alt-root {
+            transition: transform .45s cubic-bezier(.2,.9,.2,1), opacity .35s ease, filter .35s ease;
+            transform-origin: center top;
+            z-index: 1;
+            position: relative;
+            background: transparent;
+        }
+
+        /* hidden when terminal active */
+        .hidden-by-terminal {
+            pointer-events: none;
+        }
+
+        /* ---------- Terminal frame (default hidden small) ---------- */
+        #terminal-frame {
+            width: 100%;
+            height: 600px;
+            border: 0;
+            display: block;
+            transition: opacity .35s ease, transform .45s cubic-bezier(.2,.9,.2,1);
+            opacity: 1;
+        }
+
+        /* full-screen terminal mode */
+        .terminal-mode #terminal-frame {
+            position: fixed;
+            inset: 0; /* top:0; right:0; bottom:0; left:0; */
+            width: 100vw;
+            height: 100vh;
+            z-index: 1100;
+            display: block;
+            background: #000;
+            opacity: 1;
+            transform: none;
+            transition: opacity .3s ease;
+        }
+
+        /* when terminal active, hide alt-root visually */
+        .terminal-mode .alt-root {
+            opacity: 0;
+            transform: scale(.985) translateY(12px);
+            filter: blur(6px) saturate(.9) contrast(.9);
+            pointer-events: none;
+            transition: transform .35s cubic-bezier(.2,.9,.2,1), opacity .35s ease, filter .35s ease;
+        }
+
+        /* subtle enter/exit animation helper */
+        .view-switching .alt-root,
+        .view-switching #terminal-frame {
+            transition-duration: .28s;
+        }
+
+        /* small keyboard hint */
+        .toggle-hint {
+            font-size: .75rem;
+            opacity: .8;
+            color: #dbeafe;
+        }
+
+        /* accessibility focus */
+        .switch:focus { outline: 2px solid rgba(59,130,246,0.6); outline-offset: 3px; border-radius: 999px; }
+
         @media (min-width: 1980px) {
-            body {
-                max-width: 1600px;
-                margin: auto;
-                padding: 2.5rem;
-            }
+            body { max-width: 1600px; margin: auto; padding: 2.5rem; }
+        }
+
+        /* Respect reduced motion */
+        @media (prefers-reduced-motion: reduce) {
+            .alt-root, #terminal-frame, .view-switching * { transition: none !important; animation: none !important; }
         }
     </style>
-    <script type="application/ld+json">
-        {
-            "@context": "http://schema.org",
-            "@type": "Person",
-            "name": "Aditya Vivek Thota",
-            "jobTitle": "Full-stack and Applied AI Software Engineer",
-            "url": "https://aditya-xq.github.io",
-            "sameAs": [
-                "https://github.com/aditya-xq",
-                "https://linkedin.com/in/aditya-vivek-thota"
-            ]
-        }
-    </script>
 </head>
 <body>
-    <header>
-        <h4>👨‍💻 Aditya's Digital Portfolio</h4>
-        <nav>
-            <details>
-                <summary><p>Menu</p></summary>
+    <!-- TOP-RIGHT TOGGLE -->
+    <div class="view-toggle" aria-hidden="false">
+        <div class="label" aria-hidden="true">AltCSS</div>
+
+        <!-- accessible switch; aria-pressed="false" => altcss, "true" => terminal -->
+        <button id="viewSwitch" class="switch" role="switch" aria-checked="false" aria-pressed="false" title="Toggle Terminal view (T)">
+            <span class="knob" aria-hidden="true"></span>
+        </button>
+
+        <div class="label" aria-hidden="true">Terminal</div>
+        <div style="width:8px"></div>
+        <div class="toggle-hint">Esc / T</div>
+    </div>
+
+    <!-- MAIN: wrap original content so we can hide it easily -->
+    <div class="alt-root" id="altRoot">
+        <header>
+            <h4>👨‍💻 Aditya's Digital Portfolio</h4>
+            <nav>
+                <details>
+                    <summary><p>Menu</p></summary>
+                    <div>
+                        <p><a href="https://www.linkedin.com/in/aditya-vivek-thota/" target="_blank" rel="noopener noreferrer">
+                            🧑‍💼 LinkedIn
+                        </a></p>
+                        <p><a href="https://xq-is-here.medium.com/" target="_blank" rel="noopener noreferrer">
+                            ✍️ Medium
+                        </a></p>
+                        <p><a href="https://github.com/aditya-xq/" target="_blank" rel="noopener noreferrer">
+                            🌟 GitHub
+                        </a></p>
+                    </div>
+                </details>
                 <div>
                     <p><a href="https://www.linkedin.com/in/aditya-vivek-thota/" target="_blank" rel="noopener noreferrer">
                         🧑‍💼 LinkedIn
@@ -65,120 +186,241 @@
                     <p><a href="https://xq-is-here.medium.com/" target="_blank" rel="noopener noreferrer">
                         ✍️ Medium
                     </a></p>
-                    <p><a href="https://github.com/aditya-xq/" target="_blank" rel="noopener noreferrer">
+                    <p><a href="https://github.com/aditya-xq" target="_blank" rel="noopener noreferrer">
                         🌟 GitHub
                     </a></p>
                 </div>
-            </details>
-            <div>
-                <p><a href="https://www.linkedin.com/in/aditya-vivek-thota/" target="_blank" rel="noopener noreferrer">
-                    🧑‍💼 LinkedIn
-                </a></p>
-                <p><a href="https://xq-is-here.medium.com/" target="_blank" rel="noopener noreferrer">
-                    ✍️ Medium
-                </a></p>
-                <p><a href="https://github.com/aditya-xq" target="_blank" rel="noopener noreferrer">
-                    🌟 GitHub
-                </a></p>
-            </div>
-        </nav>
-    </header>
-    <article id="about" aria-label="About me">
-        <p>Kon'nichiwa 👋!</p>
-        <p>I'm <b>Aditya Vivek Thota</b>, a software engineer with <b>6.5 years</b> of experience in React, Next.js, Node.js, TypeScript, Python, and Applied AI.</p>
-        <p>As a tech-agnostic professional, I quickly adapt to any tech stack or framework.</p>
-        <p>I’m also a seasoned technical writer with <b>150+ articles</b> on AI, deep learning, and software engineering.</p>
-        <p>Here’s a snapshot of my recent work.</p>
-        <hr>
-        <section id="work" aria-label="Work">
-            <article>
-                <h4>🚀 Projects</h4>
+            </nav>
+        </header>
+
+        <article id="about" aria-label="About me">
+            <p>Kon'nichiwa 👋!</p>
+            <p>I'm <b>Aditya Vivek Thota</b>, a software engineer with <b>6.5 years</b> of experience in React, Next.js, Node.js, TypeScript, Python, and Applied AI.</p>
+            <p>As a tech-agnostic professional, I quickly adapt to any tech stack or framework.</p>
+            <p>I’m also a seasoned technical writer with <b>150+ articles</b> on AI, deep learning, and software engineering.</p>
+            <p>Here’s a snapshot of my recent work.</p>
+            <hr>
+            <section id="work" aria-label="Work">
+                <article>
+                    <h4>🚀 Projects</h4>
+                    <ul>
+                        <li><p><b>AutoProject</b> <a href="https://github.com/aditya-xq/AutoProject" target="_blank" rel="noopener noreferrer">[GitHub]</a>: Your ultimate BYOK tool to automate product and project management with AI-powered workflows. Tech: Svelte, SvelteKit, TailwindCSS, Vercel's AI SDK</p></li>
+                        <li><p><b>TechFlix</b> <a href="https://techflix.xqbuilds.com/" target="_blank" rel="noopener noreferrer">[Live Demo]</a>: A tech content aggregation platform summarizing 150+ engineering blogs, research journals and news sources on a single feed. Tech: Python, Svelte, SvelteKit, MongoDB</p></li>
+                        <li><p><b>PicToWebP</b> <a href="https://github.com/aditya-xq/PicToWebP" target="_blank" rel="noopener noreferrer">[GitHub]</a>: A blazingly fast, lightweight bulk image to WebP converter that can help you save over 90% of disk space. Tech: Python, Flask, Image Processing, Rust</p></li>
+                        <li><p><b>PromptGPT Pro</b> <a href="https://chatgpt.com/g/g-ExO1xp4Oh-promptgpt-pro" target="_blank" rel="noopener noreferrer">[Live Demo] <a href="https://github.com/aditya-xq/PromptGPT" target="_blank" rel="noopener noreferrer">[README]</a>: A custom GPT designed to craft creative, concise prompts with self-improving feedback loops. Tech: Prompt Engineering, ChatGPT</p></li>
+                    </ul>
+                </article>
+                <article>
+                    <h4>📑 Articles</h4>
+                    <ol>
+                        <li><p>Explained: Transformers for Everyone <a href="https://medium.com/p/af01cbe600c5" target="_blank" rel="noopener noreferrer">[Medium]</a> 22K+ views</p></li>
+                        <li><p>Explained: Tokens and Embeddings in LLMs <a href="https://medium.com/p/69a16ba5db33" target="_blank" rel="noopener noreferrer">[Medium]</a> 19K+ views</p></li>
+                        <li><p>Explained: Attention Mechanism in AI <a href="https://medium.com/p/e9bb6f0b0b4d" target="_blank" rel="noopener noreferrer">[Medium]</a> 6.5K+ views</p></li>
+                        <li><p>Creating a Real-time Data Stream Using Apache Kafka <a href="https://medium.com/the-research-nest/creating-a-real-time-data-stream-using-apache-kafka-in-python-132e0e5630d3" target="_blank" rel="noopener noreferrer">[Medium]</a> 12.4K+ views</p></li>
+                        <li><p>Optimizing Memory Usage in Python <a href="https://medium.com/the-research-nest/optimizing-memory-usage-in-python-e8a30e0dddd3" target="_blank" rel="noopener noreferrer">[Medium]</a> 5.5K+ views</p></li>
+                        <li><p>Explained: Hyperparameters in Deep Learning <a href="https://medium.com/the-research-nest/explained-hyperparameters-in-deep-learning-9b1e0f3b9029" target="_blank" rel="noopener noreferrer">[Medium]</a> 3.7K+ views</p></li>
+                    </ol>
+                </article>
+            </section>
+            <hr>
+            <section id="metrics" aria-label="Metrics">
+                <h4>📈 My Profile in Numbers</h4>
                 <ul>
-                    <li><p><b>AutoProject</b> <a href="https://github.com/aditya-xq/AutoProject" target="_blank" rel="noopener noreferrer">[GitHub]</a>: Your ultimate BYOK tool to automate product and project management with AI-powered workflows. Tech: Svelte, SvelteKit, TailwindCSS, Vercel's AI SDK</p></li>
-                    <li><p><b>TechFlix</b> <a href="https://techflix.xqbuilds.com/" target="_blank" rel="noopener noreferrer">[Live Demo]</a>: A tech content aggregation platform summarizing 150+ engineering blogs, research journals and news sources on a single feed. Tech: Python, Svelte, SvelteKit, MongoDB</p></li>
-                    <li><p><b>PicToWebP</b> <a href="https://github.com/aditya-xq/PicToWebP" target="_blank" rel="noopener noreferrer">[GitHub]</a>: A blazingly fast, lightweight bulk image to WebP converter that can help you save over 90% of disk space. Tech: Python, Flask, Image Processing, Rust</p></li>
-                    <li><p><b>PromptGPT Pro</b> <a href="https://chatgpt.com/g/g-ExO1xp4Oh-promptgpt-pro" target="_blank" rel="noopener noreferrer">[Live Demo] <a href="https://github.com/aditya-xq/PromptGPT" target="_blank" rel="noopener noreferrer">[README]</a>: A custom GPT designed to craft creative, concise prompts with self-improving feedback loops. Tech: Prompt Engineering, ChatGPT</p></li>
+                    <li><p>👨‍💻 6 years of experience in software development</p></li>
+                    <li><p>🌐 150+ articles on AI, deep learning, and software engineering</p></li>
+                    <li><p>📊 LinkedIn: 53K+ followers with 4M+ annual impressions</p></li>
+                    <li><p>📱 TechFlix Daily: 335 subscribers</p></li>
+                    <li><p>✍️ Medium: 1,718 followers (Thank you 💌!)</p></li>
+                    <li><p>🌟 GitHub: 650+ contributions in 2024</p></li>
                 </ul>
-            </article>
-            <article>
-                <h4>📑 Articles</h4>
-                <ol>
-                    <li><p>Explained: Transformers for Everyone <a href="https://medium.com/p/af01cbe600c5" target="_blank" rel="noopener noreferrer">[Medium]</a> 22K+ views</p></li>
-                    <li><p>Explained: Tokens and Embeddings in LLMs <a href="https://medium.com/p/69a16ba5db33" target="_blank" rel="noopener noreferrer">[Medium]</a> 19K+ views</p></li>
-                    <li><p>Explained: Attention Mechanism in AI <a href="https://medium.com/p/e9bb6f0b0b4d" target="_blank" rel="noopener noreferrer">[Medium]</a> 6.5K+ views</p></li>
-                    <li><p>Creating a Real-time Data Stream Using Apache Kafka <a href="https://medium.com/the-research-nest/creating-a-real-time-data-stream-using-apache-kafka-in-python-132e0e5630d3" target="_blank" rel="noopener noreferrer">[Medium]</a> 12.4K+ views</p></li>
-                    <li><p>Optimizing Memory Usage in Python <a href="https://medium.com/the-research-nest/optimizing-memory-usage-in-python-e8a30e0dddd3" target="_blank" rel="noopener noreferrer">[Medium]</a> 5.5K+ views</p></li>
-                    <li><p>Explained: Hyperparameters in Deep Learning <a href="https://medium.com/the-research-nest/explained-hyperparameters-in-deep-learning-9b1e0f3b9029" target="_blank" rel="noopener noreferrer">[Medium]</a> 3.7K+ views</p></li>
-                </ol>
-            </article>
-        </section>
-        <hr>
-        <section id="metrics" aria-label="Metrics">
-            <h4>📈 My Profile in Numbers</h4>
-            <ul>
-                <li><p>👨‍💻 6 years of experience in software development</p></li>
-                <li><p>🌐 150+ articles on AI, deep learning, and software engineering</p></li>
-                <li><p>📊 LinkedIn: 53K+ followers with 4M+ annual impressions</p></li>
-                <li><p>📱 TechFlix Daily: 335 subscribers</p></li>
-                <li><p>✍️ Medium: 1,718 followers (Thank you 💌!)</p></li>
-                <li><p>🌟 GitHub: 650+ contributions in 2024</p></li>
-            </ul>
-        </section>
-        <hr>
-        <section id="resume" aria-label="Resume">
-            <h4>👨‍💻 Little more about my work exp</h4>
-            <br>
-            <div>
-                <input type="radio" name="tabs" id="tab1" checked>
-                <input type="radio" name="tabs" id="tab2">
-                <input type="radio" name="tabs" id="tab3">
-                <nav>
-                    <label for="tab1">Software</label>
-                    <label for="tab2">Product</label>
-                    <label for="tab3">Content</label>
-                </nav>
-                <section>
-                    <ul>
-                        <li>🚀 At Visa, I currently lead the UI/UX efforts for a large-scale horizontal platform, where I own the frontend architecture and development of core systems like a form builder, renderer, shared component library and SDK, along with RBAC and IAM management. This work is built on modern technologies like React 18 and Next.js 14 with the app router, leveraging Visa’s internal design system to create consistent, scalable, and accessible interfaces.</li>
-                        <li>I also helped with the transition of the VDCS UI to React 18 with functional components and Redux Toolkit, improving code maintainability and performance across 110+ UI screens. These improvements made the UI faster, easier to test, and more modular for future scalability.</li>
-                        <li>🔧 My responsibilities extended beyond frontend leadership—I led the migration of VDCS batch jobs to Visa's internal Hadoop platform, cutting down on software licensing costs by reducing third-party dependencies. This migration aligned with internal modernization efforts and helped streamline data workflows.</li>
-                        <li>I also contributed to system stability by enhancing alerting and monitoring for batch jobs. Earlier in my role as a full-stack engineer, I shipped high-impact features like DAF and ApplePay configurations and worked on accessibility enhancements that brought the platform in line with the latest WCAG standards.</li>
-                    </ul>
-                </section>
-                <section>
-                    <ul>
-                        <li>🚀 As a solopreneur, I’ve built a suite of innovative tools and products that reflect my passion for automation, design, and performance. <b>AutoProject</b> is an AI-powered project management tool that streamlines everything from PRD generation to task creation and integrates directly with Linear.</li>
-                        <li><b>TechFlix</b> curates and summarizes over 150 tech blogs and 15+ research papers using AI models and LM Studio Inference, delivering content through a smooth SvelteKit-powered interface. These tools were designed not only for utility but to create a frictionless experience that blends technical depth with design elegance.</li>
-                        <li>🎨 I also created <b>AltCSS</b>, an offbeat, class-less CSS library that pushes the limits of CSS design and is available on NPM. It's built for minimalism and experimentation, ideal for developers who want clean design without writing extra markup.</li>
-                        <li>My tool <b>PicToWebP</b>—a multithreaded Python and Rust-powered image converter—enables lightning-fast folder-wide conversions to WebP. It saves over 90% disk space and provides detailed reports, making it ideal for optimizing image-heavy websites or local storage. These tools reflect my ethos of building sleek, efficient, and developer-friendly utilities.</li>
-                    </ul>
-                </section>
-                <section>
-                    <ul>
-                        <li>📚 Alongside my engineering career, I run <b>The Research Nest</b>, a Medium publication focused on STEM education and research. I grew it organically to ~1K followers and 7K+ average monthly views.</li>
-                        <li>My thought leadership on LinkedIn has also been widely recognized. I was one of India’s original 20 <b>LinkedIn Top Voices</b> in 2020 and the youngest recipient that year. I’ve grown my audience to 53K+ followers and over 4M annual impressions—all organically, without clickbait or shady growth hacks.</li>
-                        <li>📝 Previously, I led the Writing Program at <b>Qrius</b>, where I managed editorial operations for a 12M+ reader base. I collaborated with the research team to bring fresh and insightful content to a diverse and informed audience, focusing on quality and engagement.</li>
-                        <li>Before that, as <b>Head of Content at Probe, NIT Trichy</b>, I built the team’s blog presence from the ground up. I started flagship series like Alumni Corner and Probe Interviews and expanded the brand’s presence on LinkedIn and Instagram. My leadership ensured consistency and quality across all written and marketing output.</li>
-                    </ul>
-                </section> 
-            </div>
-        </section>
-        <hr>
-        <section id="contact" aria-label="Contact">
-            <h4>📧 Contact</h4>
-            <p>Feel free to reach out to me at <a href="mailto:adityavivek.xq@gmail.com">adityavivek.xq@gmail.com</a>.</p>
-            <p>You can also find me on <a href="https://www.linkedin.com/in/aditya-vivek-thota/" target="_blank" rel="noopener noreferrer">LinkedIn</a> and <a href="https://github.com/aditya-xq" target="_blank" rel="noopener noreferrer">GitHub</a>.</p>
-        </section>
-    </article>
-    <footer>
-        <p>© 2025 Aditya Vivek Thota. All rights reserved.</p>
-        <p>Built with ❤️ using <a href="https://aditya-xq.github.io/altcss/" target="_blank" rel="noopener noreferrer">🌈AltCSS</a> and pure HTML.</p>
-    </footer>
+            </section>
+            <hr>
+            <section id="resume" aria-label="Resume">
+                <h4>👨‍💻 Little more about my work exp</h4>
+                <br>
+                <div>
+                    <input type="radio" name="tabs" id="tab1" checked>
+                    <input type="radio" name="tabs" id="tab2">
+                    <input type="radio" name="tabs" id="tab3">
+                    <nav>
+                        <label for="tab1">Software</label>
+                        <label for="tab2">Product</label>
+                        <label for="tab3">Content</label>
+                    </nav>
+                    <section>
+                        <ul>
+                            <li>🚀 At Visa, I currently lead the UI/UX efforts for a large-scale horizontal platform, where I own the frontend architecture and development of core systems like a form builder, renderer, shared component library and SDK, along with RBAC and IAM management. This work is built on modern technologies like React 18 and Next.js 14 with the app router, leveraging Visa’s internal design system to create consistent, scalable, and accessible interfaces.</li>
+                            <li>I also helped with the transition of the VDCS UI to React 18 with functional components and Redux Toolkit, improving code maintainability and performance across 110+ UI screens. These improvements made the UI faster, easier to test, and more modular for future scalability.</li>
+                            <li>🔧 My responsibilities extended beyond frontend leadership—I led the migration of VDCS batch jobs to Visa's internal Hadoop platform, cutting down on software licensing costs by reducing third-party dependencies. This migration aligned with internal modernization efforts and helped streamline data workflows.</li>
+                            <li>I also contributed to system stability by enhancing alerting and monitoring for batch jobs. Earlier in my role as a full-stack engineer, I shipped high-impact features like DAF and ApplePay configurations and worked on accessibility enhancements that brought the platform in line with the latest WCAG standards.</li>
+                        </ul>
+                    </section>
+                    <section>
+                        <ul>
+                            <li>🚀 As a solopreneur, I’ve built a suite of innovative tools and products that reflect my passion for automation, design, and performance. <b>AutoProject</b> is an AI-powered project management tool that streamlines everything from PRD generation to task creation and integrates directly with Linear.</li>
+                            <li><b>TechFlix</b> curates and summarizes over 150 tech blogs and 15+ research papers using AI models and LM Studio Inference, delivering content through a smooth SvelteKit-powered interface. These tools were designed not only for utility but to create a frictionless experience that blends technical depth with design elegance.</li>
+                            <li>🎨 I also created <b>AltCSS</b>, an offbeat, class-less CSS library that pushes the limits of CSS design and is available on NPM. It's built for minimalism and experimentation, ideal for developers who want clean design without writing extra markup.</li>
+                            <li>My tool <b>PicToWebP</b>—a multithreaded Python and Rust-powered image converter—enables lightning-fast folder-wide conversions to WebP. It saves over 90% disk space and provides detailed reports, making it ideal for optimizing image-heavy websites or local storage. These tools reflect my ethos of building sleek, efficient, and developer-friendly utilities.</li>
+                        </ul>
+                    </section>
+                    <section>
+                        <ul>
+                            <li>📚 Alongside my engineering career, I run <b>The Research Nest</b>, a Medium publication focused on STEM education and research. I grew it organically to ~1K followers and 7K+ average monthly views.</li>
+                            <li>My thought leadership on LinkedIn has also been widely recognized. I was one of India’s original 20 <b>LinkedIn Top Voices</b> in 2020 and the youngest recipient that year. I’ve grown my audience to 53K+ followers and over 4M annual impressions—all organically, without clickbait or shady growth hacks.</li>
+                            <li>📝 Previously, I led the Writing Program at <b>Qrius</b>, where I managed editorial operations for a 12M+ reader base. I collaborated with the research team to bring fresh and insightful content to a diverse and informed audience, focusing on quality and engagement.</li>
+                            <li>Before that, as <b>Head of Content at Probe, NIT Trichy</b>, I built the team’s blog presence from the ground up. I started flagship series like Alumni Corner and Probe Interviews and expanded the brand’s presence on LinkedIn and Instagram. My leadership ensured consistency and quality across all written and marketing output.</li>
+                        </ul>
+                    </section> 
+                </div>
+            </section>
+            <hr>
+            <section id="contact" aria-label="Contact">
+                <h4>📧 Contact</h4>
+                <p>Feel free to reach out to me at <a href="mailto:adityavivek.xq@gmail.com">adityavivek.xq@gmail.com</a>.</p>
+                <p>You can also find me on <a href="https://www.linkedin.com/in/aditya-vivek-thota/" target="_blank" rel="noopener noreferrer">LinkedIn</a> and <a href="https://github.com/aditya-xq" target="_blank" rel="noopener noreferrer">GitHub</a>.</p>
+            </section>
+        </article>
+
+        <footer>
+            <p>© 2025 Aditya Vivek Thota. All rights reserved.</p>
+            <p>Built with ❤️ using <a href="https://aditya-xq.github.io/altcss/" target="_blank" rel="noopener noreferrer">🌈AltCSS</a> and pure HTML.</p>
+        </footer>
+    </div>
+
+    <!-- Terminal iframe: lazy-loaded. data-src used so it doesn't load until needed -->
     <iframe id="terminal-frame"
-        src="terminal/index.html"
-        style="width:100%;height:600px;border:0;"
+        data-src="terminal/index.html"
         sandbox="allow-scripts allow-same-origin allow-forms"
-        loading="lazy">
+        loading="lazy"
+        title="Terminal View"
+        style="width:100%;height:600px;border:0;">
     </iframe>
+
+    <script>
+        (function () {
+            const KEY = 'preferredView'; // 'alt' or 'terminal'
+            const DEFAULT = 'alt';
+            const doc = document.documentElement;
+            const body = document.body;
+            const viewSwitch = document.getElementById('viewSwitch');
+            const altRoot = document.getElementById('altRoot');
+            const iframe = document.getElementById('terminal-frame');
+
+            // read saved preference
+            function getSaved() {
+                try {
+                    return localStorage.getItem(KEY) || DEFAULT;
+                } catch (e) {
+                    return DEFAULT;
+                }
+            }
+
+            // save preference
+            function save(pref) {
+                try { localStorage.setItem(KEY, pref); } catch(e){}
+            }
+
+            // set iframe src lazily on first terminal open
+            let iframeLoaded = false;
+            function ensureIframeLoaded() {
+                if (!iframeLoaded) {
+                    const data = iframe.getAttribute('data-src');
+                    if (data) iframe.setAttribute('src', data);
+                    iframeLoaded = true;
+                }
+            }
+
+            // apply the view, animated
+            function setView(pref, instant = false) {
+                const goingTerminal = pref === 'terminal';
+                // accessibility states
+                viewSwitch.setAttribute('aria-pressed', goingTerminal ? 'true' : 'false');
+                viewSwitch.setAttribute('aria-checked', goingTerminal ? 'true' : 'false');
+
+                // small class while animating
+                body.classList.add('view-switching');
+
+                // ensure iframe loads if terminal requested
+                if (goingTerminal) ensureIframeLoaded();
+
+                // tweak classes for terminal mode
+                if (goingTerminal) {
+                    // add class on <body> that triggers CSS to show fullscreen terminal and hide alt-root
+                    body.classList.add('terminal-mode');
+                    // hide alt-root from keyboard and screen readers
+                    altRoot.setAttribute('aria-hidden', 'true');
+                    altRoot.classList.add('hidden-by-terminal');
+                } else {
+                    body.classList.remove('terminal-mode');
+                    altRoot.removeAttribute('aria-hidden');
+                    altRoot.classList.remove('hidden-by-terminal');
+                }
+
+                // small timeout to remove switching helper after transition
+                if (instant) {
+                    // remove quickly
+                    setTimeout(() => body.classList.remove('view-switching'), 40);
+                } else {
+                    setTimeout(() => body.classList.remove('view-switching'), 420);
+                }
+
+                // persist
+                save(pref);
+            }
+
+            // toggle handler
+            function toggleView() {
+                const current = (viewSwitch.getAttribute('aria-pressed') === 'true') ? 'terminal' : 'alt';
+                const next = current === 'terminal' ? 'alt' : 'terminal';
+                setView(next);
+            }
+
+            // init according to saved preference
+            const initial = getSaved();
+            // set the UI quickly without long animation on load
+            setView(initial, true);
+
+            // click
+            viewSwitch.addEventListener('click', function (e) {
+                e.preventDefault();
+                toggleView();
+                // visual feedback - small bounce
+                this.animate([{ transform: 'scale(0.98)' }, { transform: 'scale(1)' }], { duration: 180 });
+            });
+
+            // keyboard shortcuts: 'T' toggles, ESC exits terminal view
+            window.addEventListener('keydown', (ev) => {
+                // don't catch typing in inputs
+                const tag = document.activeElement && document.activeElement.tagName;
+                if (tag === 'INPUT' || tag === 'TEXTAREA' || document.activeElement.isContentEditable) return;
+
+                if (ev.key === 'T' || ev.key === 't') {
+                    ev.preventDefault();
+                    toggleView();
+                } else if (ev.key === 'Escape') {
+                    if (body.classList.contains('terminal-mode')) {
+                        setView('alt');
+                    }
+                }
+            });
+
+            // click outside terminal when terminal-mode -> no-op (keeps terminal)
+            // optionally you could add a small "Exit" UI inside the terminal iframe, but cross-origin may prevent messaging
+            // so we rely on ESC and the toggle button.
+
+            // If you want to start with the terminal when the URL has ?terminal, honor it
+            const urlParams = new URLSearchParams(location.search);
+            if (urlParams.get('terminal') === '1') {
+                setView('terminal');
+            }
+
+            // expose small API for debugging if needed
+            window._xqView = {
+                setView,
+                toggleView,
+                getView: () => (viewSwitch.getAttribute('aria-pressed') === 'true') ? 'terminal' : 'alt'
+            };
+        })();
+    </script>
 </body>
 </html>
