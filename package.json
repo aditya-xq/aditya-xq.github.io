@@ -1,11 +1,13 @@
 {
-  "devDependencies": {
-    "html-minifier": "^4.0.0"
-  },
-  "scripts": {
-    "build": "bun build.js"
-  },
   "dependencies": {
     "altcss": "^0.0.23"
+  },
+  "scripts": {
+    "build": "bun build.js",
+    "dev": "bun dev.js",
+    "preview": "bun dev.js --no-watch"
+  },
+  "devDependencies": {
+    "html-minifier-terser": "^7.2.0"
   }
 }
